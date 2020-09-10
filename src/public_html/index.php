@@ -39,8 +39,7 @@ if (preg_match("#^".APP_CONTEXT."/+password_reset/*(\?|$)#i", $_SERVER['REQUEST_
 	exit(0);
 }
 if (preg_match("#^".APP_CONTEXT."/+register/*(\?|$)#i", $_SERVER['REQUEST_URI'])) {
-	//include __DIR__.'/../app/register.php';
-	echo "Sorry, registration is closed.";
+	include __DIR__.'/../app/register.php';
 	exit(0);
 }
 if (preg_match("#^".APP_CONTEXT."/+show_captcha/*(\?|$)#i", $_SERVER['REQUEST_URI'])) {

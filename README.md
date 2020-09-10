@@ -11,40 +11,26 @@ All PGP commands are executed in the browser using the [kbpgp.js](https://keybas
 
 The website code is based (heavily based) on the [php-login-advanced](https://github.com/panique/php-login-advanced) project.
 
-
 ## Requirements
 
-- PHP 5.3.7+
-- MySQL 5 database (please use a modern version of MySQL (5.5, 5.6, 5.7) as very old versions have a exotic bug that
-[makes PDO injections possible](http://stackoverflow.com/q/134099/1114320).
-- activated PHP's GD graphic functions (the tutorial shows how)
-- enabled OpenSSL module (the tutorial shows how)
+- [Docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) or [Podman](https://podman.io/getting-started/installation.html) and [podman-compose](https://github.com/containers/podman-compose) or another container engine (tested on Podman 2.0.6).
 - this version uses mail sending, so you need to have an **SMTP mail sending account** somewhere OR you know how to get
  **linux's sendmail** etc. to run. As it's nearly impossible to send real mails with PHP's mail() function (due to
  anti-spam blocking of nearly every major mail provider in the world) you should really use SMTP mail sending.
 
-## Installation (quick setup)
+## Installation
 
-* 1. create database *login* and table *users* via the SQL statements in the `_installation` folder.
-* 2. in `config/config.php`, change mySQL user and password (*DB_USER* and *DB_PASS*).
-* 3. in `config/config.php`, change *COOKIE_DOMAIN* to your domain name (and don't forget to put the dot in front of the domain!)
-* 4. in `config/config.php`, change *COOKIE_SECRET_KEY* to a random string. this will make your cookies more secure
-* 5. change the URL part of EMAIL_PASSWORDRESET_URL and EMAIL_VERIFICATION_URL in `config/config.php` to your URL! You need to provide the URL of your project here to link to your project from within
-verification/password reset mails.
-* 6. as this version uses email sending, you'll need to a) provide an SMTP account in the config OR b) install a mail server tool on your server.
-Using a real SMTP provider (like [SMTP2GO](http://www.smtp2go.com/?s=devmetal) etc.) is highly recommended. Sending emails manually via mail() is something for hardcore admins.
-Usually mails sent via mail() will never reach the receiver. Please also don't try weird Gmail setups, this can fail to a lot of reasons.
-Get professional and send mails like mail should be sent. It's extremely cheap and works.
-
-- To enable OpenSSL, do `sudo apt-get install openssl` (and restart the apache via `sudo service apache2 restart`)
-- To enable PHP's GD graphic functions, do `sudo apt-get install php5-gd` (and restart the apache via `sudo service apache2 restart`)
-
-## Installation (very detailed setup)
-
-A very detailed guideline on how to install the script
-[here in this blog post](http://www.dev-metal.com/install-php-login-nets-2-advanced-login-script-ubuntu/).
+* 1. in `.env`, set unique MySQL credentials (*DB_* variables).
+* 2. in `.env`, change *COOKIE_DOMAIN* to your domain name (and don't forget to put the dot in front of the domain!)
+* 3. in `.env`, change *COOKIE_SECRET_KEY* to a random string. this will make your cookies more secure
+* 4. as this version uses email sending, you'll need to provide an SMTP account in the `.env` (*EMAIL_* variables). Using a real SMTP provider (like [SMTP2GO](http://www.smtp2go.com/?s=devmetal) etc.) is highly recommended. 
+* 5. optionaly change *EMAIL_VERIFICATION_SUBJECT*, *EMAIL_VERIFICATION_CONTENT*, *EMAIL_PASSWORDRESET_SUBJECT* and *EMAIL_PASSWORDRESET_CONTENT* environment variables. 
+* 6. if you are using a reverse proxies, configure treir IPs as *TRUSTED_PROXIES* environment variable (coma separeted list of IPs)
+* 7. run docker-compose up -d or podman-compose up -d (depending on your container engine).
 
 ## Troubleshooting & useful stuff
+
+Run `podman logs -f journal-web` to inpect Apache access log and to view PHP errors.
 
 Please use a real SMTP provider for sending mail. Using something like gmail.com or even trying to send mails via
 mail() will bring you into a lot of problems (unless you really really know what you are doing). Sending mails is a
@@ -58,13 +44,6 @@ Have a look here for full explanaition: https://support.google.com/mail/answer/1
 
 2. "SMTP data quota exceeded": gmail blocks you because you have sent more than 500 mails per day (?) or because your users have provided
  too much fake email addresses. The only way to get around this is renting professional SMTP mail sending, prices are okay, 10.000 mails for $5.
-
-## Security notice
-
-This script comes with a handy .htaccess in the views folder that denies direct access to the files within the folder
-(so that people cannot render the views directly). However, these .htaccess files only work if you have set
-`AllowOverride` to `All` in your apache vhost configs. There are lots of tutorials on the web on how to do this.
-
 
 Contributing
 ------------
