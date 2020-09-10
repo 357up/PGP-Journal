@@ -1,0 +1,66 @@
+version: "3.2"
+services:
+  php:
+    build:
+      context: './php/'
+      args:
+       PHP_VERSION: ${PHP_VERSION}
+    restart: always
+    volumes:
+      - "./src/:/var/www/journal/webspaceroot/"
+    container_name: "${PHP_NAME}"
+
+  mariadb:
+    build:
+      context: .
+      dockerfile: ./mariadb/Dockerfile
+      args:
+        MARIADB_VERSION: ${MARIADB_VERSION}
+        MYSQL_DATABASE: ${DB_NAME}
+    restart: always
+    ports:
+      - "127.0.0.1:33306:3306"
+    volumes:
+      - ./mariadb/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_USER: "${DB_USERNAME}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+    container_name: "${MARIADB_NAME}"
+
+  httpd:
+    build:
+      context: './httpd/'
+      args:
+       APACHE_VERSION: ${APACHE_VERSION}
+       MYSQL_DATABASE: ${DB_NAME}
+       MYSQL_USER: ${DB_USERNAME}
+       MYSQL_PASSWORD: ${DB_PASSWORD}
+       TRUSTED_PROXIES: ${TRUSTED_PROXIES}
+       EMAIL_USE_SMTP: ${EMAIL_USE_SMTP}
+       EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+       EMAIL_SMTP_AUTH: ${EMAIL_SMTP_AUTH}
+       EMAIL_SMTP_USERNAME: ${EMAIL_SMTP_USERNAME}
+       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+       EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+       EMAIL_SMTP_ENCRYPTION: ${EMAIL_SMTP_ENCRYPTION}
+       EMAIL_PASSWORDRESET_FROM: ${EMAIL_PASSWORDRESET_FROM}
+       EMAIL_PASSWORDRESET_FROM_NAME: ${EMAIL_PASSWORDRESET_FROM_NAME}
+       EMAIL_PASSWORDRESET_SUBJECT: ${EMAIL_PASSWORDRESET_SUBJECT}
+       EMAIL_PASSWORDRESET_CONTENT: ${EMAIL_PASSWORDRESET_CONTENT}
+       EMAIL_VERIFICATION_FROM: ${EMAIL_VERIFICATION_FROM}
+       EMAIL_VERIFICATION_FROM_NAME: ${EMAIL_VERIFICATION_FROM_NAME}
+       EMAIL_VERIFICATION_SUBJECT: ${EMAIL_VERIFICATION_SUBJECT}
+       EMAIL_VERIFICATION_CONTENT: ${EMAIL_VERIFICATION_CONTENT}
+       COOKIE_RUNTIME: ${COOKIE_RUNTIME}
+       COOKIE_DOMAIN: ${COOKIE_DOMAIN}
+       COOKIE_SECRET_KEY: ${COOKIE_SECRET_KEY}
+    depends_on:
+      - php
+      - mariadb
+    ports:
+      - "127.0.0.1:8088:80"
+    volumes:
+      - ./src/:/var/www/journal/webspaceroot/
+    container_name: "${APACHE_NAME}"
