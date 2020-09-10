@@ -19,14 +19,15 @@ The website code is based (heavily based) on the [php-login-advanced](https://gi
  **linux's sendmail** etc. to run. As it's nearly impossible to send real mails with PHP's mail() function (due to anti-spam blocking of nearly every major mail provider in the world) you should really use SMTP mail sending.
 
 ## Installation
-
-* 1. in `.env`, set unique MySQL credentials (*DB_* variables).
-* 2. in `.env`, change *COOKIE_DOMAIN* to your domain name (and don't forget to put the dot in front of the domain!)
-* 3. in `.env`, change *COOKIE_SECRET_KEY* to a random string. this will make your cookies more secure
-* 4. as this version uses email sending, you'll need to provide an SMTP account in the `.env` (*EMAIL_* variables). Using a real SMTP provider (like [SMTP2GO](http://www.smtp2go.com/?s=devmetal) etc.) is highly recommended.
-* 5. optionaly change *EMAIL_VERIFICATION_SUBJECT*, *EMAIL_VERIFICATION_CONTENT*, *EMAIL_PASSWORDRESET_SUBJECT* and *EMAIL_PASSWORDRESET_CONTENT* environment variables.
-* 6. if you are using a reverse proxies, configure treir IPs as *TRUSTED_PROXIES* environment variable (coma separeted list of IPs)
-* 7. run docker-compose up -d or podman-compose up -d (depending on your container engine).
+* 1. copy `.env.example` to `.env` and `docker-compose.example.yml` to `docker-compose.yml`
+* 2. in `.env`, set unique MySQL credentials (*DB_* variables).
+* 3. in `.env`, change *COOKIE_DOMAIN* to your domain name (and don't forget to put the dot in front of the domain!)
+* 4. in `.env`, change *COOKIE_SECRET_KEY* to a random string. this will make your cookies more secure
+* 5. as this version uses email sending, you'll need to provide an SMTP account in the `.env` (*EMAIL_* variables). Using a real SMTP provider (like [SMTP2GO](http://www.smtp2go.com/?s=devmetal) etc.) is highly recommended.
+* 6. optionaly change *EMAIL_VERIFICATION_SUBJECT*, *EMAIL_VERIFICATION_CONTENT*, *EMAIL_PASSWORDRESET_SUBJECT* and *EMAIL_PASSWORDRESET_CONTENT* environment variables.
+* 7. if you are using a reverse proxies, configure treir IPs as *TRUSTED_PROXIES* environment variable (coma separeted list of IPs)
+* 8. configure which ports to expose in `docker-compose.yml`
+* 9. run docker-compose up -d or podman-compose up -d (depending on your container engine).
 
 ## Troubleshooting & useful stuff
 
